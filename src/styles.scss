@@ -48,3 +48,42 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .cdk-drag-placeholder {
   opacity: 0.5;
 }
+
+
+.mat-tab-nab-bar{
+  /* 1. Style the element while it is being dragged (The Ghost) */
+  .cdk-drag-preview {
+    background-color: white;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    opacity: 0.9;
+    z-index: 1000;
+    /* Match the padding of your standard tabs to look consistent */
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Ensure text doesn't wrap awkwardly during drag */
+    white-space: nowrap;
+  }
+
+  /* 2. Style the placeholder (The empty space left behind) */
+  .cdk-drag-placeholder {
+    opacity: 0;
+  }
+
+  /* 3. Animate the other tabs sliding out of the way */
+  .cdk-drop-list-dragging .mat-tab-link:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  /* 4. Optional: Add a grab cursor so users know it's draggable */
+  .mat-tab-link {
+    cursor: grab;
+  }
+
+  .mat-tab-link:active {
+    cursor: grabbing;
+  }
+}

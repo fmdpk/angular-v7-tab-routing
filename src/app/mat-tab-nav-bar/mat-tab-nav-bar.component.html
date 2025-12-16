@@ -1,0 +1,27 @@
+<nav mat-tab-nav-bar
+     class="mat-tab-nav-bar"
+     cdkDropList
+     cdkDropListOrientation="horizontal"
+     (cdkDropListDropped)="drop($event)">
+
+  <a mat-tab-link
+     *ngFor="let tab of tabs"
+     cdkDrag
+     (click)="selectTab(tab)"
+     [active]="activeTab === tab">
+
+    {{ tab.label }}
+
+
+  </a>
+  <div *cdkDragPlaceholder class="tab-placeholder">
+  </div>
+
+</nav>
+
+<div class="tab-content-container">
+  <div class="p-3">
+    <h3>{{ activeTab.label }}</h3>
+    <p>{{ activeTab.content }}</p>
+  </div>
+</div>
