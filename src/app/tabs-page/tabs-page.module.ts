@@ -7,7 +7,6 @@ import {MatIconModule, MatTabsModule} from '@angular/material';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../shared/shared.module';
-import {AppModule} from '../app.module';
 import {MatTabNavBarComponent} from '../mat-tab-nav-bar/mat-tab-nav-bar.component';
 
 
