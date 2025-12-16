@@ -30,11 +30,11 @@ const routes: Routes = [
           modulePath: '../features/feature-c/feature-c.module#FeatureCModule',
         }
       },
-      {
-        path: '',
-        redirectTo: 'feature-a',
-        pathMatch: 'full'
-      },
+      // {
+      //   path: '',
+      //   redirectTo: 'feature-a',
+      //   pathMatch: 'full'
+      // },
     ]
   },
 ];
