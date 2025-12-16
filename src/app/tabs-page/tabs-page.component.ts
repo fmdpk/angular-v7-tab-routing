@@ -1,7 +1,6 @@
 import {
   Component,
   Inject,
-  inject,
   Injector, OnDestroy,
   OnInit,
   PLATFORM_ID,
@@ -11,11 +10,11 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import {isPlatformBrowser} from '@angular/common';
-import {Router} from '@angular/router';
 import {TabInfo, TabsStateService} from './tabs-state.service';
 import {UnsavedChangesGuard} from '../guards/unsaved-changes.guard';
 import {Subject} from 'rxjs';
 import {first, takeUntil} from 'rxjs/operators';
+import {TabItem} from '../mat-tab-nav-bar/mat-tab-nav-bar.component';
 
 @Component({
   selector: 'app-tabs-page',
@@ -27,11 +26,11 @@ export class TabsPageComponent implements OnInit, OnDestroy {
   activeIndex: number = -1;
   tabs: TabInfo[] = [];
   private destroy$ = new Subject<void>();
+  activeTab = null;
 
   constructor(
     @Inject(PLATFORM_ID) platformId: string,
     public tabsStateService: TabsStateService,
-    private router: Router,
     @Inject(Injector) private injector: any,
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -44,21 +43,10 @@ export class TabsPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  getAllListConnections(index) {
-    const connections = [];
-    for (let i = 0; i < this.tabs.length; i++) {
-      if (i !== index) {
-        connections.push('list-' + i);
-      }
-    }
-    return connections;
-  }
-
   syncTabs() {
     this.tabsStateService.tabs$
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        console.log(res);
         this.tabs = res;
       });
   }
@@ -68,19 +56,8 @@ export class TabsPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.activeIndex = res;
+        this.activeTab = this.tabs[res];
       });
-  }
-
-  open(title: string, route: string) {
-    this.tabsStateService.tabData$.next({
-      key: title,
-      title,
-      component: null,
-      route,
-      isDetail: false,
-      data: {}
-    });
-    this.router.navigateByUrl(route);
   }
 
   async canCLoseTab(tab: TabInfo, index: number) {
@@ -89,15 +66,11 @@ export class TabsPageComponent implements OnInit, OnDestroy {
       const guard = this.injector.get(UnsavedChangesGuard);
       const result = await guard.canDeactivate(foundTab.component).pipe(first()).toPromise();
       if (result) {
-        this.closeTab(index, tab.key);
+        this.closeTab(tab, index);
       }
     } else {
-      this.closeTab(index, tab.key);
+      this.closeTab(tab, index);
     }
-  }
-
-  closeTab(index: number, key: string) {
-    this.tabsStateService.closeTab(index, key);
   }
 
   onActiveChange(index: number) {
@@ -108,7 +81,6 @@ export class TabsPageComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<any[]>) {
-    console.log(event);
     moveItemInArray(this.tabs, event.previousIndex, event.currentIndex);
     if (this.activeIndex === event.previousIndex) {
       this.tabsStateService.activeIndex$.next(event.currentIndex);
@@ -128,8 +100,33 @@ export class TabsPageComponent implements OnInit, OnDestroy {
     return item.key;
   }
 
+  closeTab(tab: TabInfo, index: number) {
+    if (this.activeTab.key === tab.key) {
+      const foundTabIndex = this.tabs.findIndex(item => item.key === tab.key);
+      this.tabsStateService.closeTab(index, tab.key).then(_ => {
+        if (this.tabs[foundTabIndex]) {
+          this.activeTab = this.tabs[foundTabIndex];
+          return;
+        } else if (this.tabs[foundTabIndex - 1]) {
+          this.activeTab = this.tabs[foundTabIndex - 1];
+        }
+      });
+    } else {
+      this.tabsStateService.closeTab(index, tab.key);
+    }
+
+  }
+
+  // 4. Handle tab selection
+  selectTab(tab: TabItem, index: number) {
+    this.activeTab = tab;
+    this.onActiveChange(index);
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+
 }

@@ -1,60 +1,36 @@
-<app-mat-tab-nav-bar></app-mat-tab-nav-bar>
+<app-navbar></app-navbar>
+<nav mat-tab-nav-bar
+     class="mat-tab-nav-bar example-list"
+     cdkDropList
+     cdkDropListOrientation="horizontal"
+     (cdkDropListDropped)="drop($event)">
 
-<div class="tabs-header">
-  <button
-    mat-button
-    (click)="
-      open( 'Feature A', '/tabs/feature-a')
-    "
-  >
-    Feature A
-  </button>
-  <button
-    mat-button
-    (click)="
-      open( 'Feature B', '/tabs/feature-b')
-    "
-  >
-    Feature B
-  </button>
-  <button
-    mat-button
-    (click)="
-      open( 'Feature C', '/tabs/feature-c')
-    "
-  >
-    Feature C
-  </button>
-</div>
+  <a mat-tab-link
+     *ngFor="let tab of tabs; index as i; trackBy:trackByFn"
+     cdkDrag
+     (click)="selectTab(tab, i)"
+     [active]="activeTab === tab">
 
-<mat-tab-group
-  [(selectedIndex)]="activeIndex"
-  (selectedIndexChange)="onActiveChange($event)"
->
-  <mat-tab *ngFor="let tab of tabs; index as i; trackBy:trackByFn">
-    <ng-template mat-tab-label>
-      <div class="custom-mat-tab-header-wrapper">
-        <span
-        >{{ tab.title }}</span
-        >
-        <button
-          mat-icon-button
-          (click)="$event.stopPropagation(); canCLoseTab(tab,i)"
-          aria-label="Close tab"
-        >
-          <mat-icon>close</mat-icon>
-        </button>
-        <span
-          class="example-drag-tabs-preview"
-          *cdkDragPreview
-        >{{ tab.title }}</span
-        >
-      </div>
-    </ng-template>
-    <app-material-tab-content
-      [tabKey]="tab.key"
-      [componentData]="tab.data"
-      [componentType]="tab.component"
-    ></app-material-tab-content>
-  </mat-tab>
-</mat-tab-group>
+    {{ tab.title }}
+    <button
+      mat-icon-button
+      (click)="$event.stopPropagation(); canCLoseTab(tab, i)"
+      aria-label="Close tab"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+
+  </a>
+  <div *cdkDragPlaceholder class="tab-placeholder">
+  </div>
+
+</nav>
+
+<app-material-tab-content
+  *ngFor="let tab of tabs; index as i; trackBy:trackByFn"
+  [ngClass]="tab && activeTab && tab.key === activeTab.key ? '' : 'hidden-tab'"
+  [tabKey]="tab.key"
+  [componentData]="tab.data"
+  [componentType]="tab.component"
+></app-material-tab-content>
+

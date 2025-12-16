@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
-interface TabItem {
+export interface TabItem {
   id: number;
   label: string;
   content: string;

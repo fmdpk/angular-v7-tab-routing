@@ -27,9 +27,11 @@
 
 </nav>
 
-<div class="tab-content-container" *ngIf="tabs.length">
-  <div class="p-3">
-    <h3>{{ activeTab.label }}</h3>
-    <p>{{ activeTab.content }}</p>
+<ng-template *ngIf="tabs.length">
+  <div class="tab-content-container">
+    <div class="p-3">
+      <h3>{{ activeTab.label }}</h3>
+      <p>{{ activeTab.content }}</p>
+    </div>
   </div>
-</div>
+</ng-template>

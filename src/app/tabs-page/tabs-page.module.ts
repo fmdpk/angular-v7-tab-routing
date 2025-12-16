@@ -8,13 +8,15 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../shared/shared.module';
 import {MatTabNavBarComponent} from '../mat-tab-nav-bar/mat-tab-nav-bar.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 
 @NgModule({
   declarations: [
     TabsPageComponent,
     MaterialTabContentComponent,
-    MatTabNavBarComponent
+    MatTabNavBarComponent,
+    NavbarComponent
   ],
   imports: [
     TabsPageRoutingModule,
