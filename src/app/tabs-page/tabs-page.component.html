@@ -1,3 +1,5 @@
+<app-mat-tab-nav-bar></app-mat-tab-nav-bar>
+
 <div class="tabs-header">
   <button
     mat-button
@@ -56,42 +58,3 @@
     ></app-material-tab-content>
   </mat-tab>
 </mat-tab-group>
-
-<!--<mat-tab-group-->
-<!--  cdkDropList-->
-<!--  cdkDropListOrientation="horizontal"-->
-<!--  (cdkDropListDropped)="drop($event)"-->
-<!--  cdkDropListElementContainer=".mat-mdc-tab-labels"-->
-<!--  class="example-drag-tabs"-->
-<!--  [mat-stretch-tabs]="false"-->
-<!--  [(selectedIndex)]="activeIndex"-->
-<!--  (selectedIndexChange)="onActiveChange($event)"-->
-<!--&gt;-->
-
-<!--  <mat-tab>-->
-<!--    <ng-template mat-tab-label>-->
-<!--      <div class="custom-mat-tab-header-wrapper">-->
-<!--        <span-->
-<!--          cdkDrag-->
-<!--          cdkDragPreviewClass="example-drag-tabs-preview"-->
-<!--          cdkDragRootElement=".mat-mdc-tab"-->
-<!--        >{{ tab.title }}</span-->
-<!--        >-->
-<!--        <button-->
-<!--          mat-icon-button-->
-<!--          (click)="$event.stopPropagation(); canCLoseTab(tab,i)"-->
-<!--          aria-label="Close tab"-->
-<!--        >-->
-<!--          <mat-icon>close</mat-icon>-->
-<!--        </button>-->
-<!--      </div>-->
-<!--    </ng-template>-->
-<!--    <app-material-tab-content-->
-<!--      [tabKey]="tab.key"-->
-<!--      [componentData]="tab.data"-->
-<!--      [componentType]="tab.component"-->
-<!--    ></app-material-tab-content>-->
-
-<!--  </mat-tab>-->
-
-<!--</mat-tab-group>-->

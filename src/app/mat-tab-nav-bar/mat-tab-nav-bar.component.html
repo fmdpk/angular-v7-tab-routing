@@ -1,5 +1,7 @@
+<button mat-button (click)="createTab()">add tab</button>
+
 <nav mat-tab-nav-bar
-     class="mat-tab-nav-bar"
+     class="mat-tab-nav-bar example-list"
      cdkDropList
      cdkDropListOrientation="horizontal"
      (cdkDropListDropped)="drop($event)">
@@ -11,7 +13,13 @@
      [active]="activeTab === tab">
 
     {{ tab.label }}
-
+    <button
+      mat-icon-button
+      (click)="$event.stopPropagation(); closeTab(tab)"
+      aria-label="Close tab"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
 
   </a>
   <div *cdkDragPlaceholder class="tab-placeholder">
@@ -19,7 +27,7 @@
 
 </nav>
 
-<div class="tab-content-container">
+<div class="tab-content-container" *ngIf="tabs.length">
   <div class="p-3">
     <h3>{{ activeTab.label }}</h3>
     <p>{{ activeTab.content }}</p>

@@ -86,4 +86,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   .mat-tab-link:active {
     cursor: grabbing;
   }
+
+  .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
 }
