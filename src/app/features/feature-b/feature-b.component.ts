@@ -1,7 +1,8 @@
-import {Component, inject, OnDestroy} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {TabInfo, TabsStateService} from '../../tabs-page/tabs-state.service';
-import {Router, RouterOutlet} from '@angular/router';
+import {Router} from '@angular/router';
 import {FeatureBService} from '../../core/services/feature-b.service';
+import {CanDeactivateComponent} from '../../guards/unsaved-changes.guard';
 
 @Component({
   selector: 'app-feature-b',
@@ -9,7 +10,10 @@ import {FeatureBService} from '../../core/services/feature-b.service';
   styleUrls: ['./feature-b.component.scss'],
   providers: [FeatureBService],
 })
-export class FeatureBComponent implements OnDestroy {
+export class FeatureBComponent implements CanDeactivateComponent, OnDestroy {
+
+  formValue = '';
+  savedValue = '';
 
   constructor(
     private router: Router,
@@ -35,6 +39,17 @@ export class FeatureBComponent implements OnDestroy {
       data: {},
     },
   ];
+
+  canDeactivate(): boolean {
+    return this.formValue === this.savedValue; // false = unsaved changes
+  }
+
+  getDeactivateDialogData() {
+    return {
+      title: 'Unsaved Changes',
+      message: 'You have unsaved changes. Do you really want to close this tab?'
+    };
+  }
 
   goToDetail(event: MouseEvent, item: TabInfo, index: number) {
     (event.target as HTMLElement).blur();

@@ -23,6 +23,14 @@ export class FeatureAComponent implements OnInit, CanDeactivateComponent, OnDest
     return this.formValue === this.savedValue; // false = unsaved changes
   }
 
+  getDeactivateDialogData() {
+    return {
+      title: 'Unsaved Changes',
+      message: 'You have unsaved changes. Do you really want to close this tab?'
+    };
+  }
+
+
   ngOnDestroy() {
     console.log('FeatureAComponent Destroyed');
   }

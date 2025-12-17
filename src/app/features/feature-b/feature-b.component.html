@@ -1,3 +1,7 @@
 <ul style="width: max-content">
   <li *ngFor="let item of list; index as i; trackBy:trackByFn" style="cursor: pointer" (click)="goToDetail($event, item, i)">{{item.title}}</li>
 </ul>
+
+<hr />
+<br />
+<textarea [(ngModel)]="formValue"></textarea>

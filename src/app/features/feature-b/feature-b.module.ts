@@ -6,6 +6,7 @@ import {FeatureBRoutingModule} from './feature-b-routing.module';
 import {CommonModule} from '@angular/common';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {SharedModule} from '../../shared/shared.module';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 
 @NgModule({
@@ -17,7 +18,9 @@ import {SharedModule} from '../../shared/shared.module';
     FeatureBRoutingModule,
     CommonModule,
     MatDialogModule,
-    SharedModule
+    SharedModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [MatDialog],
   entryComponents: [FeatureBComponent],

@@ -15,6 +15,7 @@ import {UnsavedChangesGuard} from '../guards/unsaved-changes.guard';
 import {Subject} from 'rxjs';
 import {first, takeUntil} from 'rxjs/operators';
 import {TabItem} from '../mat-tab-nav-bar/mat-tab-nav-bar.component';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-tabs-page',
@@ -30,8 +31,9 @@ export class TabsPageComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(PLATFORM_ID) platformId: string,
+    private activatedRoute: ActivatedRoute,
     public tabsStateService: TabsStateService,
-    @Inject(Injector) private injector: any,
+    @Inject(Injector) private injector: Injector,
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
@@ -62,8 +64,8 @@ export class TabsPageComponent implements OnInit, OnDestroy {
 
   async canCLoseTab(tab: TabInfo, index: number) {
     const foundTab = this.tabsStateService.activeComponents$.getValue().find(item => item.tabKey === tab.key);
-    if (foundTab && 'canDeactivate' in foundTab.component) {
-      const guard = this.injector.get(UnsavedChangesGuard);
+    if (foundTab.canDeactivateGuard) {
+      const guard = this.injector.get(foundTab.canDeactivateGuard);
       const result = await guard.canDeactivate(foundTab.component).pipe(first()).toPromise();
       if (result) {
         this.closeTab(tab, index);
@@ -106,9 +108,11 @@ export class TabsPageComponent implements OnInit, OnDestroy {
       this.tabsStateService.closeTab(index, tab.key).then(_ => {
         if (this.tabs[foundTabIndex]) {
           this.activeTab = this.tabs[foundTabIndex];
+          this.onActiveChange(foundTabIndex);
           return;
         } else if (this.tabs[foundTabIndex - 1]) {
           this.activeTab = this.tabs[foundTabIndex - 1];
+          this.onActiveChange(foundTabIndex - 1);
         }
       });
     } else {

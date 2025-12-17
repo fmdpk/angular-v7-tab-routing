@@ -1,15 +1,19 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {Observable, of} from 'rxjs';
+import {tap} from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class AuthGuard implements CanActivate {
-  constructor() {
+  constructor(private router: Router) {
   }
 
   canActivate(route: ActivatedRouteSnapshot,
-              state: RouterStateSnapshot
+              state: RouterStateSnapshot,
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return of(true);
+    return of(true).pipe(tap((res) => {
+      // this.router.navigateByUrl('/tabs/feature-b');
+      return res;
+    }));
   }
 }

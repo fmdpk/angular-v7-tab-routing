@@ -15,6 +15,7 @@ export interface ActiveTabs {
   tabKey: any;
   path: string;
   component: any;
+  canDeactivateGuard: any
 }
 
 @Injectable({providedIn: 'root'})

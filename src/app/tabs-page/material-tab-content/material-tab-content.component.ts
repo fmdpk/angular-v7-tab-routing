@@ -1,7 +1,7 @@
 import {
   AfterViewInit,
-  Component, ComponentFactoryResolver, Injector,
-  Input, NgModuleFactoryLoader,
+  Component, ComponentFactoryResolver, ComponentRef, Injector,
+  Input, NgModuleFactory, NgModuleFactoryLoader,
   OnInit, ViewChild,
 } from '@angular/core';
 import {TabsStateService} from '../tabs-state.service';
@@ -22,7 +22,7 @@ export class MaterialTabContentComponent implements AfterViewInit, OnInit {
 
   constructor(private router: Router,
               private tabsStateService: TabsStateService,
-              private loader: NgModuleFactoryLoader,
+              private ngModuleFactoryLoader: NgModuleFactoryLoader,
               private injector: Injector,
               private activatedRoute: ActivatedRoute) {
   }
@@ -34,25 +34,46 @@ export class MaterialTabContentComponent implements AfterViewInit, OnInit {
   ngAfterViewInit() {
     const data = this.getRouteData();
     if (this.componentType) {
-      this.loader.load(data.modulePath).then(factory => {
-        const moduleRef = factory.create(this.injector);
-        const resolver = moduleRef.componentFactoryResolver;
-        const componentFactory = resolver.resolveComponentFactory(this.componentType);
-        const viewContainerRef = this.adHost.viewContainerRef;
-        viewContainerRef.clear();
-        const compRef = viewContainerRef.createComponent(componentFactory);
-        const activeComps = this.tabsStateService.activeComponents$.getValue();
-        activeComps.push({
-          tabKey: this.tabKey,
-          path: this.router.url,
-          component: compRef.instance
-        });
-        this.tabsStateService.activeComponents$.next(activeComps);
+      this.ngModuleFactoryLoader.load(data.modulePath).then(factory => {
+        const compRef = this.createComponent(factory);
+        this.modifyActiveComponents(compRef);
         if (this.componentData) {
           (compRef.instance as any).data = this.componentData;
         }
       });
     }
+  }
+
+  modifyActiveComponents(compRef: ComponentRef<any>) {
+    const activeComps = this.tabsStateService.activeComponents$.getValue();
+    activeComps.push({
+      tabKey: this.tabKey,
+      path: this.router.url,
+      component: compRef.instance,
+      canDeactivateGuard: this.getDeactivateGuard()
+    });
+    this.tabsStateService.activeComponents$.next(activeComps);
+  }
+
+  getDeactivateGuard() {
+    let canDeactivateGuard = null;
+    let current = this.activatedRoute.snapshot;
+    while (current.firstChild) {
+      current = current.firstChild;
+      if (!current.firstChild && current.routeConfig.canDeactivate) {
+        canDeactivateGuard = current.routeConfig.canDeactivate[0];
+      }
+    }
+    return canDeactivateGuard;
+  }
+
+  createComponent(factory: NgModuleFactory<any>): ComponentRef<any> {
+    const moduleRef = factory.create(this.injector);
+    const resolver = moduleRef.componentFactoryResolver;
+    const componentFactory = resolver.resolveComponentFactory(this.componentType);
+    const viewContainerRef = this.adHost.viewContainerRef;
+    viewContainerRef.clear();
+    return viewContainerRef.createComponent(componentFactory);
   }
 
   getRouteData() {
