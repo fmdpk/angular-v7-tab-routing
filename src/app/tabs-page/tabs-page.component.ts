@@ -10,7 +10,7 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import {isPlatformBrowser} from '@angular/common';
-import {TabInfo, TabsStateService} from './tabs-state.service';
+import {ActiveTabs, TabInfo, TabsStateService} from './tabs-state.service';
 import {Subject} from 'rxjs';
 import {first, takeUntil} from 'rxjs/operators';
 import {TabItem} from '../mat-tab-nav-bar/mat-tab-nav-bar.component';
@@ -60,16 +60,16 @@ export class TabsPageComponent implements OnInit, OnDestroy {
       });
   }
 
-  async canCLoseTab(tab: TabInfo, index: number) {
-    const foundTab = this.tabsStateService.activeComponents$.getValue().find(item => item.tabKey === tab.key);
+  async canCLoseTab(tab: ActiveTabs, index: number) {
+    const foundTab = this.tabsStateService.activeComponents$.getValue().find(item => item.tabKey === tab.tabKey);
     if (foundTab.canDeactivateGuard) {
       const guard = this.injector.get(foundTab.canDeactivateGuard);
       const result = await guard.canDeactivate(foundTab.component).pipe(first()).toPromise();
       if (result) {
-        this.closeTab(tab, index);
+        this.closeTab(foundTab, index);
       }
     } else {
-      this.closeTab(tab, index);
+      this.closeTab(foundTab, index);
     }
   }
 
@@ -100,10 +100,10 @@ export class TabsPageComponent implements OnInit, OnDestroy {
     return item.key;
   }
 
-  closeTab(tab: TabInfo, index: number) {
-    if (this.activeTab.key === tab.key) {
-      const foundTabIndex = this.tabs.findIndex(item => item.key === tab.key);
-      this.tabsStateService.closeTab(index, tab.key).then(_ => {
+  closeTab(tab: ActiveTabs, index: number) {
+    if (this.activeTab.key === tab.tabKey) {
+      const foundTabIndex = this.tabs.findIndex(item => item.key === tab.tabKey);
+      this.tabsStateService.closeTab(index, tab.tabKey).then(_ => {
         if (this.tabs[foundTabIndex]) {
           this.activeTab = this.tabs[foundTabIndex];
           this.onActiveChange(foundTabIndex);
@@ -117,7 +117,7 @@ export class TabsPageComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      this.tabsStateService.closeTab(index, tab.key);
+      this.tabsStateService.closeTab(index, tab.tabKey);
     }
 
   }

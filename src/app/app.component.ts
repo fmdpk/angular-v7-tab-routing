@@ -1,7 +1,7 @@
 import {Component, OnInit, Type} from '@angular/core';
 import {ActivatedRouteSnapshot, ActivationEnd, NavigationEnd, Router} from '@angular/router';
 import {TabInfo, TabsStateService} from './tabs-page/tabs-state.service';
-import {MENU_ITEM_INTERFACE, MENU_ITEMS} from './core/data/menu-items';
+import {MenuItemInterface, MENU_ITEMS} from './core/data/menu-items';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +10,7 @@ import {MENU_ITEM_INTERFACE, MENU_ITEMS} from './core/data/menu-items';
 })
 export class AppComponent implements OnInit {
   title = 'angular-v18-material-tab-routing';
-  menuItems: MENU_ITEM_INTERFACE[] = JSON.parse(JSON.stringify(MENU_ITEMS));
+  menuItems: MenuItemInterface[] = JSON.parse(JSON.stringify(MENU_ITEMS));
 
   constructor(
     private router: Router,
@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  createTabData(args: { clonedChild: MENU_ITEM_INTERFACE, url: string, child: MENU_ITEM_INTERFACE, data: TabInfo }) {
+  createTabData(args: { clonedChild: MenuItemInterface, url: string, child: MenuItemInterface, data: TabInfo }) {
     const split = args.url.split(args.child.route);
     if (args.data && args.data.data) {
       args.clonedChild.data = args.data.data;
@@ -78,7 +78,7 @@ export class AppComponent implements OnInit {
     return args.clonedChild;
   }
 
-  openTab(item: MENU_ITEM_INTERFACE, component: any) {
+  openTab(item: MenuItemInterface, component: any) {
     item.component = component;
     this.tabsStateService.openTab(item);
   }

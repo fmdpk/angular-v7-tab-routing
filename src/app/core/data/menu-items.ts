@@ -1,11 +1,11 @@
 import {TabInfo} from '../../tabs-page/tabs-state.service';
 
-export interface MENU_ITEM_INTERFACE extends TabInfo {
-  children: MENU_ITEM_INTERFACE[]
-  param?: string
+export interface MenuItemInterface extends TabInfo {
+  children: MenuItemInterface[];
+  param?: string;
 }
 
-export const MENU_ITEMS: MENU_ITEM_INTERFACE[] = [
+export const MENU_ITEMS: MenuItemInterface[] = [
   {
     key: '/tabs/feature-a',
     title: 'Feature A',
@@ -44,4 +44,4 @@ export const MENU_ITEMS: MENU_ITEM_INTERFACE[] = [
     children: [],
     data: {}
   },
-]
+];
