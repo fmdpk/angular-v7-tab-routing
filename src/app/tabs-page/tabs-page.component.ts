@@ -11,11 +11,9 @@ import {
 } from '@angular/cdk/drag-drop';
 import {isPlatformBrowser} from '@angular/common';
 import {TabInfo, TabsStateService} from './tabs-state.service';
-import {UnsavedChangesGuard} from '../guards/unsaved-changes.guard';
 import {Subject} from 'rxjs';
 import {first, takeUntil} from 'rxjs/operators';
 import {TabItem} from '../mat-tab-nav-bar/mat-tab-nav-bar.component';
-import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-tabs-page',
@@ -31,7 +29,6 @@ export class TabsPageComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(PLATFORM_ID) platformId: string,
-    private activatedRoute: ActivatedRoute,
     public tabsStateService: TabsStateService,
     @Inject(Injector) private injector: Injector,
   ) {
@@ -49,6 +46,7 @@ export class TabsPageComponent implements OnInit, OnDestroy {
     this.tabsStateService.tabs$
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
+        console.log(res);
         this.tabs = res;
       });
   }
@@ -113,6 +111,9 @@ export class TabsPageComponent implements OnInit, OnDestroy {
         } else if (this.tabs[foundTabIndex - 1]) {
           this.activeTab = this.tabs[foundTabIndex - 1];
           this.onActiveChange(foundTabIndex - 1);
+          return;
+        } else if (!this.tabs.length) {
+          this.tabsStateService.syncRouter('/');
         }
       });
     } else {
