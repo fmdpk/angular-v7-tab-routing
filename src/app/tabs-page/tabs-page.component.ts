@@ -62,7 +62,7 @@ export class TabsPageComponent implements OnInit, OnDestroy {
 
   async canCLoseTab(tab: ActiveTabs, index: number) {
     const foundTab = this.tabsStateService.activeComponents$.getValue().find(item => item.tabKey === tab.tabKey);
-    if (foundTab.canDeactivateGuard) {
+    if (foundTab && foundTab.canDeactivateGuard) {
       const guard = this.injector.get(foundTab.canDeactivateGuard);
       const result = await guard.canDeactivate(foundTab.component).pipe(first()).toPromise();
       if (result) {
