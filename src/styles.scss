@@ -52,10 +52,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .mat-tab-nav-bar{
 
-  .mat-tab-links{
-    flex-direction: row-reverse !important;
-  }
-
   /* 1. Style the element while it is being dragged (The Ghost) */
   .cdk-drag-preview {
     background-color: white;

@@ -26,6 +26,7 @@ export class TabsPageComponent implements OnInit, OnDestroy {
   tabs: TabInfo[] = [];
   private destroy$ = new Subject<void>();
   activeTab = null;
+  direction: 'rtl' | 'ltr' = 'rtl';
 
   constructor(
     @Inject(PLATFORM_ID) platformId: string,
@@ -80,8 +81,11 @@ export class TabsPageComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<any[]>) {
-    const length = event.container.data.length;
-    const targetIndex = length - 1 - event.currentIndex
+    let targetIndex = event.currentIndex;
+    if (this.direction === 'rtl') {
+      const length = event.container.data.length;
+      targetIndex = length - 1 - event.currentIndex;
+    }
     moveItemInArray(this.tabs, event.previousIndex, targetIndex);
     if (this.activeIndex === event.previousIndex) {
       this.tabsStateService.activeIndex$.next(targetIndex);
