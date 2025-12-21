@@ -50,7 +50,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 
-.mat-tab-nab-bar{
+.mat-tab-nav-bar{
+
+  .mat-tab-links{
+    flex-direction: row-reverse !important;
+  }
+
   /* 1. Style the element while it is being dragged (The Ghost) */
   .cdk-drag-preview {
     background-color: white;
@@ -66,6 +71,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     justify-content: center;
     /* Ensure text doesn't wrap awkwardly during drag */
     white-space: nowrap;
+    margin-right: auto;
   }
 
   /* 2. Style the placeholder (The empty space left behind) */

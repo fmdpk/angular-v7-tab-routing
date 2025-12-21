@@ -9,6 +9,7 @@ import {CommonModule} from '@angular/common';
 import {SharedModule} from '../shared/shared.module';
 import {MatTabNavBarComponent} from '../mat-tab-nav-bar/mat-tab-nav-bar.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import {BidiModule, Dir} from '@angular/cdk/bidi';
 
 
 @NgModule({
@@ -16,7 +17,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     TabsPageComponent,
     MaterialTabContentComponent,
     MatTabNavBarComponent,
-    NavbarComponent
+    NavbarComponent,
   ],
   imports: [
     TabsPageRoutingModule,
@@ -26,6 +27,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     DragDropModule,
     CommonModule,
     SharedModule,
+    BidiModule,
   ],
   providers: [],
   bootstrap: [],

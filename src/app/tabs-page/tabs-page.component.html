@@ -1,30 +1,37 @@
 <app-navbar></app-navbar>
-<nav mat-tab-nav-bar
-     class="mat-tab-nav-bar example-list"
-     cdkDropList
-     cdkDropListOrientation="horizontal"
-     (cdkDropListDropped)="drop($event)">
+<div dir="ltr">
+  <nav mat-tab-nav-bar
+       class="mat-tab-nav-bar example-list"
+       cdkDropList
+       [cdkDropListData]="tabs"
+       cdkDropListOrientation="horizontal"
+       (cdkDropListDropped)="drop($event)">
 
-  <a mat-tab-link
-     *ngFor="let tab of tabs; index as i; trackBy:trackByFn"
-     cdkDrag
-     (click)="selectTab(tab, i)"
-     [active]="activeTab === tab">
+    <a mat-tab-link
+       *ngFor="let tab of tabs; index as i; trackBy:trackByFn"
+       cdkDrag
+       [id]="i"
+       (cdkDragReleased)="getDropped($event)"
+       (cdkDragDropped)="getDropped($event)"
+       [tabIndex]="i"
+       (click)="selectTab(tab, i)"
+       [active]="activeTab === tab">
 
-    {{ tab.title }}
-    <button
-      mat-icon-button
-      (click)="$event.stopPropagation(); canCLoseTab(tab, i)"
-      aria-label="Close tab"
-    >
-      <mat-icon>close</mat-icon>
-    </button>
+      {{ tab.title }}
+      <button
+        mat-icon-button
+        (click)="$event.stopPropagation(); canCLoseTab(tab, i)"
+        aria-label="Close tab"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
 
-  </a>
-  <div *cdkDragPlaceholder class="tab-placeholder">
-  </div>
+    </a>
+    <div [id]="activeTab.key" *cdkDragPlaceholder class="tab-placeholder">
+    </div>
 
-</nav>
+  </nav>
+</div>
 
 <app-material-tab-content
   *ngFor="let tab of tabs; index as i; trackBy:trackByFn"
