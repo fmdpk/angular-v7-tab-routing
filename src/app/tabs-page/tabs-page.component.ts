@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import {
   CdkDragDrop,
-  moveItemInArray, transferArrayItem,
+  moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import {isPlatformBrowser} from '@angular/common';
 import {ActiveTabs, TabInfo, TabsStateService} from './tabs-state.service';
@@ -46,7 +46,6 @@ export class TabsPageComponent implements OnInit, OnDestroy {
     this.tabsStateService.tabs$
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        console.log(res);
         this.tabs = res;
       });
   }
@@ -61,7 +60,6 @@ export class TabsPageComponent implements OnInit, OnDestroy {
   }
 
   async canCLoseTab(tab: ActiveTabs, index: number) {
-    console.log(index);
     const foundTab = this.tabsStateService.activeComponents$.getValue().find(item => item.tabKey === tab.tabKey);
     if (foundTab.canDeactivateGuard) {
       const guard = this.injector.get(foundTab.canDeactivateGuard);
@@ -82,14 +80,8 @@ export class TabsPageComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<any[]>) {
-    console.log(event);
     const length = event.container.data.length;
-
     const targetIndex = length - 1 - event.currentIndex
-
-    const targetTab = event.container.data[targetIndex];
-
-    console.log('Dropped on:', targetTab);
     moveItemInArray(this.tabs, event.previousIndex, targetIndex);
     if (this.activeIndex === event.previousIndex) {
       this.tabsStateService.activeIndex$.next(targetIndex);
@@ -135,14 +127,6 @@ export class TabsPageComponent implements OnInit, OnDestroy {
   selectTab(tab: TabItem, index: number) {
     this.activeTab = tab;
     this.onActiveChange(index);
-  }
-
-  getDropped(event) {
-    console.log(event);
-  }
-
-  getEntered(event) {
-    console.log(event);
   }
 
   ngOnDestroy(): void {

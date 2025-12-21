@@ -11,8 +11,6 @@
        *ngFor="let tab of tabs; index as i; trackBy:trackByFn"
        cdkDrag
        [id]="i"
-       (cdkDragReleased)="getDropped($event)"
-       (cdkDragDropped)="getDropped($event)"
        [tabIndex]="i"
        (click)="selectTab(tab, i)"
        [active]="activeTab === tab">
