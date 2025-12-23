@@ -13,6 +13,7 @@ const routes: Routes = [
       {
         path: ':title',
         component: FeatureBDetailsComponent,
+        canDeactivate: [UnsavedChangesGuard],
         data: {
           modulePath: '../features/feature-b/feature-b.module#FeatureBModule',
         }

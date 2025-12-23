@@ -46,7 +46,7 @@ export class FeatureBComponent implements CanDeactivateComponent, OnDestroy {
 
   getDeactivateDialogData() {
     return {
-      title: 'Unsaved Changes',
+      title: 'Unsaved Changes(FeatureBComponent)',
       message: 'You have unsaved changes. Do you really want to close this tab?'
     };
   }
