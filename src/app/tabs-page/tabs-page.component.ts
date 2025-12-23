@@ -68,7 +68,7 @@ export class TabsPageComponent implements OnInit, OnDestroy {
       if (result) {
         this.closeTab(foundTab, index);
       }
-    } else {
+    } else if (foundTab && !foundTab.canDeactivateGuard) {
       this.closeTab(foundTab, index);
     }
   }
@@ -87,6 +87,7 @@ export class TabsPageComponent implements OnInit, OnDestroy {
       targetIndex = length - 1 - event.currentIndex;
     }
     moveItemInArray(this.tabs, event.previousIndex, targetIndex);
+    this.tabsStateService.tabs$.next(this.tabs);
     if (this.activeIndex === event.previousIndex) {
       this.tabsStateService.activeIndex$.next(targetIndex);
     } else if (

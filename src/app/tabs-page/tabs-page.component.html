@@ -10,8 +10,8 @@
     <a mat-tab-link
        *ngFor="let tab of tabs; index as i; trackBy:trackByFn"
        cdkDrag
-       [id]="i"
-       [tabIndex]="i"
+       [attr.id]="i"
+       [attr.tabIndex]="i"
        (click)="selectTab(tab, i)"
        [active]="activeTab === tab">
 
@@ -25,7 +25,7 @@
       </button>
 
     </a>
-    <div [id]="activeTab.key" *cdkDragPlaceholder class="tab-placeholder">
+    <div [attr.id]="activeTab.key" *cdkDragPlaceholder class="tab-placeholder">
     </div>
 
   </nav>
