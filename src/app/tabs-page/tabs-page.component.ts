@@ -27,6 +27,7 @@ export class TabsPageComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   activeTab = null;
   direction: 'rtl' | 'ltr' = 'rtl';
+  dynamicTabIndex = 'dynamictabindex';
 
   constructor(
     @Inject(PLATFORM_ID) platformId: string,
@@ -66,14 +67,14 @@ export class TabsPageComponent implements OnInit, OnDestroy {
       const guard = this.injector.get(foundTab.canDeactivateGuard);
       const result = await guard.canDeactivate(foundTab.component).pipe(first()).toPromise();
       if (result) {
-        this.closeTab(foundTab, index);
+        await this.closeTab(foundTab, index);
       }
     } else if (foundTab && !foundTab.canDeactivateGuard) {
-      this.closeTab(foundTab, index);
+      await this.closeTab(foundTab, index);
     }
   }
 
-  onActiveChange(index: number) {
+  onActiveTabChange(index: number) {
     const route = this.tabs[index] ? this.tabs[index].route : '/';
     this.tabsStateService.syncRouter(route).then(res => {
       this.tabsStateService.activeIndex$.next(index);
@@ -81,49 +82,58 @@ export class TabsPageComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<any[]>) {
-    let targetIndex = event.currentIndex;
-    if (this.direction === 'rtl') {
-      const length = event.container.data.length;
-      targetIndex = length - 1 - event.currentIndex;
-    }
-    moveItemInArray(this.tabs, event.previousIndex, targetIndex);
+    const [targetIndex, sourceIndex] = this.getMovedItemsIndexes(event);
+    moveItemInArray(this.tabs, sourceIndex, targetIndex);
+
+    // sync moved tabs with tabs source in tabs-state.service.ts
     this.tabsStateService.tabs$.next(this.tabs);
-    if (this.activeIndex === event.previousIndex) {
+
+    // change active tab
+    this.setActiveTab(sourceIndex, targetIndex);
+  }
+
+  setActiveTab(sourceIndex: number, targetIndex: number) {
+    if (this.activeIndex === sourceIndex) {
       this.tabsStateService.activeIndex$.next(targetIndex);
     } else if (
-      this.activeIndex > Math.min(event.previousIndex, targetIndex) &&
-      this.activeIndex <= Math.max(event.previousIndex, targetIndex)
+      this.activeIndex > Math.min(sourceIndex, targetIndex) &&
+      this.activeIndex <= Math.max(sourceIndex, targetIndex)
     ) {
       this.tabsStateService.activeIndex$.next(
-        event.previousIndex < targetIndex
+        sourceIndex < targetIndex
           ? this.tabsStateService.activeIndex$.getValue() - 1
           : this.tabsStateService.activeIndex$.getValue() + 1
       );
     }
   }
 
+  getMovedItemsIndexes(event: CdkDragDrop<any[]>) {
+    const targetIndex = this.direction === 'rtl' ? this.tabs.length - 1 - event.currentIndex : event.currentIndex;
+    const sourceIndex = this.direction === 'rtl' ? +event.item.element.nativeElement.dataset[this.dynamicTabIndex] : event.previousIndex;
+    return [targetIndex, sourceIndex];
+  }
+
   trackByFn(index, item: any) {
     return item.key;
   }
 
-  closeTab(tab: ActiveTabs, index: number) {
+  async closeTab(tab: ActiveTabs, index: number) {
     if (this.activeTab.key === tab.tabKey) {
       const foundTabIndex = this.tabs.findIndex(item => item.key === tab.tabKey);
-      this.tabsStateService.closeTab(index, tab.tabKey).then(_ => {
-        if (this.tabs[foundTabIndex]) {
-          this.activeTab = this.tabs[foundTabIndex];
-          this.onActiveChange(foundTabIndex);
-          return;
-        } else if (this.tabs[foundTabIndex - 1]) {
-          this.activeTab = this.tabs[foundTabIndex - 1];
-          this.onActiveChange(foundTabIndex - 1);
-          return;
-        } else if (!this.tabs.length) {
-          this.tabsStateService.syncRouter('/');
-        }
-      });
+      await this.tabsStateService.closeTab(index, tab.tabKey)
+      if (this.tabs[foundTabIndex]) {
+        this.activeTab = this.tabs[foundTabIndex];
+        this.onActiveTabChange(foundTabIndex);
+        return;
+      } else if (this.tabs[foundTabIndex - 1]) {
+        this.activeTab = this.tabs[foundTabIndex - 1];
+        this.onActiveTabChange(foundTabIndex - 1);
+        return;
+      } else if (!this.tabs.length) {
+        await this.tabsStateService.syncRouter('/');
+      }
     } else {
-      this.tabsStateService.closeTab(index, tab.tabKey);
+      await this.tabsStateService.closeTab(index, tab.tabKey);
     }
 
   }
@@ -131,7 +141,7 @@ export class TabsPageComponent implements OnInit, OnDestroy {
   // 4. Handle tab selection
   selectTab(tab: TabItem, index: number) {
     this.activeTab = tab;
-    this.onActiveChange(index);
+    this.onActiveTabChange(index);
   }
 
   ngOnDestroy(): void {

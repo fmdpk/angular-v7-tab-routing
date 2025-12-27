@@ -6,16 +6,17 @@
        [cdkDropListData]="tabs"
        cdkDropListOrientation="horizontal"
        (cdkDropListDropped)="drop($event)">
-
     <a mat-tab-link
+       [attr.data-dynamicTabIndex]="i"
        *ngFor="let tab of tabs; index as i; trackBy:trackByFn"
        cdkDrag
        [attr.id]="i"
        [attr.tabIndex]="i"
        (click)="selectTab(tab, i)"
        [active]="activeTab === tab">
-
-      {{ tab.title }}
+      <span [attr.data-dynamicTabIndex]="i">
+        {{ tab.title }}
+      </span>
       <button
         mat-icon-button
         (click)="$event.stopPropagation(); canCLoseTab(tab, i)"
