@@ -15,7 +15,7 @@ export interface ActiveTabs {
   tabKey: any;
   path: string;
   component: any;
-  canDeactivateGuard: any
+  canDeactivateGuard: any;
 }
 
 @Injectable({providedIn: 'root'})
@@ -67,14 +67,18 @@ export class TabsStateService {
 
   async closeTab(itemIndex: number, key: string) {
     this.isRemovingTab = true;
+
     const tabs = this.tabs$.getValue();
-    const activeComponents = this.activeComponents$.getValue();
-    const canChangeRoute: boolean = this.changeRoute(itemIndex);
     this.tabs$.next(tabs.filter((item, index) => index !== itemIndex));
+
+    const activeComponents = this.activeComponents$.getValue();
     this.activeComponents$.next(activeComponents.filter(item => item.tabKey !== key));
+
+    const canChangeRoute: boolean = this.changeRoute(itemIndex);
     if (canChangeRoute) {
       await this.syncRouter(this.tabs$.getValue()[itemIndex].route);
     }
+
     this.isRemovingTab = false;
   }
 
