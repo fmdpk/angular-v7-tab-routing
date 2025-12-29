@@ -24,7 +24,7 @@
          (click)="selectTab(tab, i)"
          [active]="activeTab === tab">
         <ng-template cdkDragPreview>
-          <div [ngClass]="activeTab === tab ? 'custom-preview-active' : 'custom-preview'">{{ tab.title }}</div>
+          <div [ngClass]="activeTab === tab ? 'custom-preview custom-preview-active' : 'custom-preview custom-preview-not-active'">{{ tab.title }}</div>
         </ng-template>
         <div class="tab-content-wrapper" [attr.data-dynamicTabIndex]="i">
           <span [attr.data-dynamicTabIndex]="i">{{ tab.title }}</span>

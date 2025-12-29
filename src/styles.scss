@@ -15,18 +15,6 @@ body {
   z-index: 11 !important;
 }
 
-.cdk-drag-placeholder {
-  opacity: 0;
-}
-
-.cdk-drag-animating {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-.cdk-drag-placeholder {
-  opacity: 0.5;
-}
-
 
 .mat-tab-nav-bar {
 
@@ -78,15 +66,12 @@ body {
     min-width: unset !important;
     width: max-content;
     overflow: visible;
-
     background: #e8eaed;
     border: 1px solid #c6c6c6;
     border-bottom: none;
-
     border-radius: 8px 8px 0 0;
     color: #444;
     font-size: 13px;
-
     opacity: 1; // override Material default
     transition: background 0.2s;
   }
@@ -170,27 +155,21 @@ body {
   padding: 8px 12px;
   width: max-content;
   overflow: visible;
-  background: #e8eaed;
   border: 1px solid #c6c6c6;
   border-bottom: none;
   border-radius: 8px 8px 0 0;
-  color: #444;
   font-size: 13px;
   opacity: 1;
   transition: background 0.2s;
 }
 
+.custom-preview-not-active {
+  background: #e8eaed;
+  color: #444;
+}
+
 .custom-preview-active {
-  padding: 8px 12px;
-  width: max-content;
-  overflow: visible;
-  border: 1px solid #c6c6c6;
-  border-bottom: none;
-  border-radius: 8px 8px 0 0;
-  font-size: 13px;
-  opacity: 1;
-  transition: background 0.2s;
   background: #0f41aeb8;
-  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.15);
   color: #fff;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.15);
 }
