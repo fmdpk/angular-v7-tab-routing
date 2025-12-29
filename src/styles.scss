@@ -1,9 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  padding: 8px 12px;
+}
+
 
 .example-drag-tabs.cdk-drop-list-dragging {
   pointer-events: none;
@@ -23,13 +30,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   opacity: 0.5;
 }
 
-.custom-mat-tab-header-wrapper{
+.custom-mat-tab-header-wrapper {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.mat-mdc-icon-button{
+.mat-mdc-icon-button {
   z-index: 11 !important;
 }
 
@@ -50,7 +57,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 
-.mat-tab-nav-bar{
+.mat-tab-nav-bar {
 
   /* 1. Style the element while it is being dragged (The Ghost) */
   .cdk-drag-preview {
@@ -98,6 +105,153 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 }
 
-.hidden-tab{
+.hidden-tab {
   display: none !important;
+}
+
+.chrome-tabs {
+  border-bottom: 1px solid #c6c6c6;
+
+  .mat-tab-links {
+    display: flex;
+    align-items: flex-end;
+    overflow-x: auto;
+
+    &::-webkit-scrollbar {
+      display: none !important;
+    }
+
+  }
+
+  .mat-tab-link {
+    height: 36px;
+    padding: 0 16px;
+    min-width: unset !important;
+    width: max-content;
+    overflow: visible;
+
+    background: #e8eaed;
+    border: 1px solid #c6c6c6;
+    border-bottom: none;
+
+    border-radius: 8px 8px 0 0;
+    color: #444;
+    font-size: 13px;
+
+    opacity: 1; // override Material default
+    transition: background 0.2s;
+  }
+
+  /* Hover */
+  .mat-tab-link:hover:not(.mat-tab-label-active) {
+    background: #dde1e6;
+  }
+
+  /* Active tab (Chrome look) */
+  .mat-tab-label-active {
+    background: #ffffff;
+    font-weight: 500;
+    //height: 42px;
+
+    .close {
+      color: #ffffff;
+    }
+  }
+
+  .close {
+    opacity: 0.6;
+    cursor: pointer;
+    color: #262626;
+    font-size: 16px;
+    margin-left: 8px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .close:hover {
+    opacity: 1;
+  }
+
+  /* Remove ink bar */
+  .mat-ink-bar {
+    display: none !important;
+  }
+
+  .tab-content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    line-height: normal;
+  }
+
+}
+
+.mat-tab-links {
+  scroll-behavior: smooth;
+  gap: 2px;
+  padding-right: 2px;
+  padding-left: 2px;
+
+  & > .mat-tab-link {
+    background: #e4e8f1;
+    padding-left: 0 !important;
+    border: 1px solid #c1c1c1;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0; /* rounded top corners */
+    transition: background 0.3s, box-shadow 0.3s;
+
+    &:hover {
+      background: #f8f9fa;
+    }
+
+    &::after {
+      display: none !important;
+    }
+
+    &.mat-tab-label-active {
+      background: #0f41aeb8;
+      color: #fff;
+    }
+  }
+
+}
+
+.custom-preview {
+  height: 36px;
+  padding: 8px 12px;
+  min-width: unset !important;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  overflow: visible;
+  background: #e8eaed;
+  border: 1px solid #c6c6c6;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  color: #444;
+  font-size: 13px;
+  opacity: 1;
+  -webkit-transition: background 0.2s;
+  transition: background 0.2s;
+}
+
+.custom-preview-active {
+  height: 36px;
+  padding: 8px 12px;
+  min-width: unset !important;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  overflow: visible;
+  border: 1px solid #c6c6c6;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  font-size: 13px;
+  opacity: 1;
+  -webkit-transition: background 0.2s;
+  transition: background 0.2s;
+  background: #0f41aeb8;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.15);
+  color: #fff;
 }

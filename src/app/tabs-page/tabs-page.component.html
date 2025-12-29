@@ -1,35 +1,48 @@
 <app-navbar></app-navbar>
-<div [dir]="direction">
-  <nav mat-tab-nav-bar
-       class="mat-tab-nav-bar example-list"
-       cdkDropList
-       [cdkDropListData]="tabs"
-       cdkDropListOrientation="horizontal"
-       (cdkDropListDropped)="drop($event)">
-    <a mat-tab-link
-       [attr.data-dynamicTabIndex]="i"
-       *ngFor="let tab of tabs; index as i; trackBy:trackByFn"
-       cdkDrag
-       [attr.id]="i"
-       [attr.tabIndex]="i"
-       (click)="selectTab(tab, i)"
-       [active]="activeTab === tab">
-      <span [attr.data-dynamicTabIndex]="i">
-        {{ tab.title }}
-      </span>
-      <button
-        mat-icon-button
-        (click)="$event.stopPropagation(); canCLoseTab(tab, i)"
-        aria-label="Close tab"
-      >
-        <mat-icon>close</mat-icon>
-      </button>
-
-    </a>
-    <div [attr.id]="activeTab.key" *cdkDragPlaceholder class="tab-placeholder">
-    </div>
-
-  </nav>
+<div class="tabs-page-wrapper">
+  <button id="left-btn" *ngIf="showLeftButton" (click)="scrollTabs(-200)">
+    <mat-icon>
+      chevron_left
+    </mat-icon>
+  </button>
+  <div [dir]="'rtl'" class="tabs-wrapper">
+    <nav mat-tab-nav-bar
+         [ngClass]="tabs.length ? '' : 'hidden-tab'"
+         #tabBar
+         class="mat-tab-nav-bar example-list chrome-tabs"
+         cdkDropList
+         [cdkDropListData]="tabs"
+         [cdkDropListLockAxis]="'x'"
+         cdkDropListOrientation="horizontal"
+         (cdkDropListDropped)="drop($event)">
+      <a mat-tab-link
+         [attr.data-dynamicTabIndex]="i"
+         #tabLink
+         *ngFor="let tab of tabs; index as i; trackBy:trackByFn"
+         cdkDrag
+         (cdkDragStarted)="getDragStart($event)"
+         (click)="selectTab(tab, i)"
+         [active]="activeTab === tab">
+        <ng-template cdkDragPreview>
+          <div [ngClass]="activeTab === tab ? 'custom-preview-active' : 'custom-preview'">{{ tab.title }}</div>
+        </ng-template>
+        <div class="tab-content-wrapper" [attr.data-dynamicTabIndex]="i">
+          <span [attr.data-dynamicTabIndex]="i">{{ tab.title }}</span>
+          <mat-icon [attr.data-dynamicTabIndex]="i" class="close"
+                    (click)="$event.stopPropagation(); canCLoseTab(tab, i)">
+            close
+          </mat-icon>
+        </div>
+      </a>
+      <div *cdkDragPlaceholder class="tab-placeholder">
+      </div>
+    </nav>
+  </div>
+  <button id="right-btn" *ngIf="showRightButton" (click)="scrollTabs(200)">
+    <mat-icon>
+      chevron_right
+    </mat-icon>
+  </button>
 </div>
 
 <app-material-tab-content
